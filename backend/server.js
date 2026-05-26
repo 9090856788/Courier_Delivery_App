@@ -7,6 +7,7 @@ import cors from "cors";
 import expressRateLimiter from "express-rate-limiter";
 import helmet from "helmet";
 import morgan from "morgan";
+import dbConnect from "./db/dbConnection.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +19,9 @@ app.use(compression());
 app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("dev"));
+
+//db connection
+dbConnect();
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}):`);
