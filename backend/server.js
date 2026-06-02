@@ -4,7 +4,6 @@ import express from "express";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import expressRateLimiter from "express-rate-limiter";
 import helmet from "helmet";
 import morgan from "morgan";
 import dbConnect from "./db/dbConnection.js";
@@ -24,6 +23,8 @@ app.use(compression());
 app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("dev"));
+
+// error handling middlewares
 app.use(notFoundHandler);
 app.use(errorHandler);
 
@@ -36,6 +37,7 @@ app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "Server is healthy" });
 });
+
 //db connection
 dbConnect();
 
