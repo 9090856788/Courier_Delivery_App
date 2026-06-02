@@ -10,18 +10,26 @@ import morgan from "morgan";
 import dbConnect from "./db/dbConnection.js";
 import swaggerSpec from "./config/swagger.js";
 import swaggerUI from "swagger-ui-express";
+import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
+import { authLimiter, globalAPILimiter } from "./middlewares/rateLimiter.js";
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-// define middlewares
+// middlewares
 app.use(express.json());
 app.use(cors());
 app.use(compression());
 app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("dev"));
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+// rateLimiter
+app.use(globalAPILimiter);
+app.use(authLimiter);
 
 // swagger documentation route
 app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
