@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userSchema";
-import { loginSchema } from "../validations/validations";
+import { loginSchema, registerSchema } from "../validations/validations";
 
 // Generate json web token
 const generateToken = (userId) => {
@@ -10,9 +10,36 @@ const generateToken = (userId) => {
 };
 
 // Register user api endpoints
+export const registerUser = async (req, res, next) => {
+  try {
+    const { error, value } = registerSchema.validate(req.body);
+    const { name, email, password } = value;
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details[0].message || "There is some error occurs",
+      });
+    }
+    const existUser = await User.findOne({ email });
+    if (existUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exist",
+      });
+    }
+    const user = await User.create({ name, email, password });
+    res.status(201).json({
+      success: true,
+      message: "User Created Successfully",
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // login user api endpoints
-export const userLogin = async (req, res, next) => {
+export const loginUser = async (req, res, next) => {
   try {
     const { error, value } = loginSchema.validate(req.body);
     const { email, password } = value;
@@ -22,7 +49,7 @@ export const userLogin = async (req, res, next) => {
         message: error.details[0].message || "There is some error occurs",
       });
     }
-    const user = await User.findOne("email");
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -47,6 +74,7 @@ export const userLogin = async (req, res, next) => {
       })
       .json({
         success: true,
+        message: "User is Logged in Successfully",
         user,
         token,
       });
