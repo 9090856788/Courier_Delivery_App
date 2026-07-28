@@ -1,7 +1,7 @@
 // 404 not found error handler
 
 export const notFoundHandler = (req, res, next) => {
-  return res.status(400).json({
+  return res.status(404).json({
     success: false,
     message: "Not found",
   });

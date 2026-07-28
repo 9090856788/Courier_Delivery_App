@@ -24,10 +24,6 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("dev"));
 
-// error handling middlewares
-app.use(notFoundHandler);
-app.use(errorHandler);
-
 // rateLimiter
 app.use(globalAPILimiter);
 app.use(authLimiter);
@@ -37,6 +33,10 @@ app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "Server is healthy" });
 });
+
+// error handling middlewares
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 //db connection
 dbConnect();
