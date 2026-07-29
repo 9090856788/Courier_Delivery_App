@@ -24,15 +24,15 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("dev"));
 
-// rateLimiter
-app.use(globalAPILimiter);
-app.use(authLimiter);
-
 // swagger documentation route
 app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "Server is healthy" });
 });
+
+// rateLimiter
+app.use(globalAPILimiter);
+app.use(authLimiter);
 
 // error handling middlewares
 app.use(notFoundHandler);
