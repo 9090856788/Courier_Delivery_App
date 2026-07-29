@@ -10,23 +10,19 @@ const seedAdmin = async () => {
     await dbConnection();
 
     const { ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+    const normalizedEmail = (ADMIN_EMAIL || "").trim().toLowerCase();
 
-    const admin = await User.findOne({
-      email: ADMIN_EMAIL,
-    });
+    const admin = await User.findOne({ email: normalizedEmail });
 
     if (admin) {
-      console.log("Admin already exists.");
-      await mongoose.disconnect();
-      process.exit(0);
+      await User.deleteOne({ _id: admin._id });
+      console.log("Existing admin removed.");
     }
-
-    const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
 
     await User.create({
       name: ADMIN_NAME,
-      email: ADMIN_EMAIL,
-      password: hashedPassword,
+      email: normalizedEmail,
+      password: ADMIN_PASSWORD,
       role: "admin",
     });
 

@@ -4,15 +4,21 @@ import { loginSchema, registerSchema } from "../validations/validations.js";
 
 // Generate json web token
 const generateToken = (userId) => {
+  const expiresIn = process.env.JWT_EXPIRES_IN || "7d";
+
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    expiresIn,
   });
 };
 
 // Register user api endpoints
 export const registerUser = async (req, res, next) => {
   try {
-    const { error, value } = registerSchema.validate(req.body);
+    const normalizedEmail = req.body.email?.trim().toLowerCase();
+    const { error, value } = registerSchema.validate({
+      ...req.body,
+      email: normalizedEmail,
+    });
     const { name, email, password } = value;
     if (error) {
       return res.status(400).json({
@@ -41,7 +47,11 @@ export const registerUser = async (req, res, next) => {
 // login user api endpoints
 export const loginUser = async (req, res, next) => {
   try {
-    const { error, value } = loginSchema.validate(req.body);
+    const normalizedEmail = req.body.email?.trim().toLowerCase();
+    const { error, value } = loginSchema.validate({
+      ...req.body,
+      email: normalizedEmail,
+    });
     const { email, password } = value;
     if (error) {
       return res.status(400).json({
@@ -49,28 +59,29 @@ export const loginUser = async (req, res, next) => {
         message: error.details[0].message || "There is some error occurs",
       });
     }
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "Invalid email or password",
+        message: `No user found for email: ${email}`,
       });
     }
-    const isPasswordMatch = await comparePassword(password);
+    const isPasswordMatch = await user.comparePassword(password);
     if (!isPasswordMatch) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
-        message: "Invalid password",
+        message: `Password mismatch for email: ${email}`,
       });
     }
     const token = generateToken(user._id);
+    const cookieDays = Number(
+      process.env.COOKIE_EXPIRES_IN || process.env.COOKIE_EXPIRE || 7,
+    );
     res
       .status(200)
       .cookie("token", token, {
         httpOnly: true,
-        expires: new Date(
-          Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
-        ),
+        expires: new Date(Date.now() + cookieDays * 24 * 60 * 60 * 1000),
       })
       .json({
         success: true,
