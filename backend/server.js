@@ -12,6 +12,9 @@ import swaggerUI from "swagger-ui-express";
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
 import { authLimiter, globalAPILimiter } from "./middlewares/rateLimiter.js";
 
+// Router Files
+import AuthRoutes from "./routes/authRoutes.js";
+
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -29,6 +32,7 @@ app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "Server is healthy" });
 });
+app.use("/api/auth", AuthRoutes);
 
 // rateLimiter
 app.use(globalAPILimiter);

@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../models/userSchema";
-import { loginSchema, registerSchema } from "../validations/validations";
+import User from "../models/userSchema.js";
+import { loginSchema, registerSchema } from "../validations/validations.js";
 
 // Generate json web token
 const generateToken = (userId) => {
