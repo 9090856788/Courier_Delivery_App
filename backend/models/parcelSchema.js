@@ -92,26 +92,25 @@ const parcelSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    status: {
-      type: String,
-      enum: [
-        "pending",
-        "in_transit",
-        "delayed",
-        "out_for_delivery",
-        "delivered",
-      ],
-      default: "pending",
-    },
     checkPoints: [checkPointSchema],
-    parcelType: {
+    shipmentType: {
       type: String,
       enum: ["National", "International"],
       required: true,
     },
+    originCity: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    destinationCity: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     deliveryType: {
       type: String,
-      enum: ["standard", "express", "same_day"],
+      enum: ["standard", "express", "same_day", "overnight"],
       required: true,
     },
     parcelSize: {
@@ -121,7 +120,19 @@ const parcelSchema = new mongoose.Schema(
     },
     parcelCategory: {
       type: String,
-      enum: ["documents", "electronics", "clothing", "other"],
+      enum: [
+        "documents",
+        "electronics",
+        "clothing",
+        "fragile",
+        "food",
+        "medicine",
+        "cosmetics",
+        "books",
+        "small_package",
+        "large_package",
+        "other",
+      ],
       required: true,
     },
     parcelDescription: {
