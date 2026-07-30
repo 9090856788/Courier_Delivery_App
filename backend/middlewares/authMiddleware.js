@@ -3,10 +3,6 @@ import  User  from "../models/userSchema.js";
 
 export const protect = async (req, res, next) => {
   let token;
-
-  console.log(req);
-  console.log(req.headers);
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")

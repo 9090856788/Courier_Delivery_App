@@ -74,9 +74,7 @@ export const loginUser = async (req, res, next) => {
       });
     }
     const token = generateToken(user._id);
-    const cookieDays = Number(
-      process.env.COOKIE_EXPIRES_IN || process.env.COOKIE_EXPIRE || 7,
-    );
+    const cookieDays = Number(process.env.COOKIE_EXPIRE || 7);
     res
       .status(200)
       .cookie("token", token, {

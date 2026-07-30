@@ -32,6 +32,8 @@ app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "Server is healthy" });
 });
+
+// API Routes
 app.use("/api/auth", AuthRoutes);
 
 // rateLimiter
