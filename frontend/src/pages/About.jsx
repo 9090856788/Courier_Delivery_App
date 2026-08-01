@@ -1,101 +1,353 @@
-import { motion } from 'framer-motion';
-import { Zap, Shield, Cpu, Heart, Truck, Globe } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { motion } from "framer-motion";
+import {
+  Truck,
+  Globe,
+  ShieldCheck,
+  Zap,
+  HeartHandshake,
+  Cpu,
+  PackageCheck,
+} from "lucide-react";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const values = [
-  { icon: Zap, title: 'Speed', desc: 'Lightning-fast deliveries across Pakistan with optimized routes.' },
-  { icon: Shield, title: 'Trust', desc: 'Your parcels are insured and handled with utmost care.' },
-  { icon: Cpu, title: 'Technology', desc: 'AI-powered logistics and real-time tracking systems.' },
-  { icon: Heart, title: 'Customer Care', desc: '24/7 support with dedicated account managers.' },
+  {
+    icon: Zap,
+    title: "Fast Delivery",
+    desc: "Optimized logistics and intelligent routing ensure your shipments reach their destination quickly.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Reliable Service",
+    desc: "Every shipment is handled with care, transparency, and secure tracking from pickup to delivery.",
+  },
+  {
+    icon: Cpu,
+    title: "Smart Technology",
+    desc: "Modern tracking, automation and digital logistics simplify shipping for businesses and individuals.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Customer First",
+    desc: "We focus on providing an exceptional customer experience through responsive support and reliable service.",
+  },
 ];
 
 const fadeUp = {
-  initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5 },
+  initial: {
+    opacity: 0,
+    y: 30,
+  },
+
+  whileInView: {
+    opacity: 1,
+    y: 0,
+  },
+
+  viewport: {
+    once: true,
+  },
+
+  transition: {
+    duration: 0.5,
+  },
 };
 
-const About = () => (
-  <div className="min-h-screen pt-24 pb-20">
-    <div className="container mx-auto px-4 md:px-6">
+const About = () => {
+  return (
+    <main className="pt-24">
       {/* Hero */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-        <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground">About SwiftPak</h1>
-        <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-          Revolutionizing parcel delivery across Pakistan with speed, reliability, and cutting-edge technology.
-        </p>
-      </motion.div>
+
+      <section className="py-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <motion.div {...fadeUp} className="mx-auto max-w-3xl text-center">
+            <span className="rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+              About CargoPilot
+            </span>
+
+            <h1 className="mt-6 text-4xl font-bold leading-tight text-foreground md:text-6xl">
+              Delivering Smarter.
+              <br />
+              Connecting India Faster.
+            </h1>
+
+            <p className="mt-6 text-lg leading-8 text-muted-foreground">
+              CargoPilot is a modern courier and logistics platform built to
+              simplify parcel delivery with secure shipping, real-time tracking
+              and technology-driven logistics solutions for businesses and
+              individuals across India.
+            </p>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Story */}
-      <motion.section {...fadeUp} className="max-w-3xl mx-auto mb-20">
-        <h2 className="font-display text-2xl font-bold text-foreground mb-4">Our Story</h2>
-        <p className="text-muted-foreground leading-relaxed mb-4">
-          Founded in 2020, SwiftPak emerged from a simple idea: Pakistan deserves a courier service that matches global standards. Starting with just 5 riders in Lahore, we've grown into a nationwide network covering 200+ cities.
-        </p>
-        <p className="text-muted-foreground leading-relaxed">
-          Today, we process over 50,000 parcels daily, powered by advanced route optimization, real-time tracking, and a team of dedicated logistics professionals who care about every single delivery.
-        </p>
-      </motion.section>
 
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4 lg:px-6">
+          <motion.div {...fadeUp} className="mx-auto max-w-4xl">
+            <h2 className="text-3xl font-bold">Our Story</h2>
+
+            <p className="mt-6 leading-8 text-muted-foreground">
+              CargoPilot was created with one goal — to make shipping simple,
+              transparent and dependable. Whether you're sending a personal
+              package or managing business deliveries, our platform provides a
+              seamless logistics experience powered by modern technology.
+            </p>
+
+            <p className="mt-5 leading-8 text-muted-foreground">
+              From shipment booking and live parcel tracking to secure delivery
+              management, CargoPilot combines innovation and operational
+              excellence to build a logistics network that businesses and
+              customers can rely on every day.
+            </p>
+          </motion.div>
+        </div>
+      </section>
       {/* Mission & Vision */}
-      <div className="grid md:grid-cols-2 gap-8 mb-20">
-        <motion.div {...fadeUp}>
-          <Card className="h-full border-border/50 shadow-sm">
-            <CardContent className="p-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 mb-4">
-                <Truck className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="font-display text-xl font-bold text-foreground mb-3">Our Mission</h3>
-              <p className="text-muted-foreground">
-                To provide fast, affordable, and reliable delivery services that connect every corner of Pakistan, empowering businesses and individuals alike.
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-        <motion.div {...fadeUp} transition={{ delay: 0.1 }}>
-          <Card className="h-full border-border/50 shadow-sm">
-            <CardContent className="p-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 mb-4">
-                <Globe className="h-6 w-6 text-accent" />
-              </div>
-              <h3 className="font-display text-xl font-bold text-foreground mb-3">Our Vision</h3>
-              <p className="text-muted-foreground">
-                To build Pakistan's most modern logistics network — one that leverages technology to deliver parcels faster, smarter, and with complete transparency.
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
 
-      {/* Values */}
-      <motion.div {...fadeUp} className="text-center mb-10">
-        <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">Our Values</h2>
-      </motion.div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {values.map((v, i) => (
-          <motion.div
-            key={v.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            whileHover={{ y: -4 }}
-          >
-            <Card className="h-full border-border/50 shadow-sm text-center">
-              <CardContent className="p-6">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 mb-4">
-                  <v.icon className="h-7 w-7 text-primary" />
-                </div>
-                <h3 className="font-display font-semibold text-foreground mb-2">{v.title}</h3>
-                <p className="text-sm text-muted-foreground">{v.desc}</p>
+      <section className="py-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="grid gap-8 lg:grid-cols-2">
+            <motion.div {...fadeUp}>
+              <Card className="h-full border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <CardContent className="p-8">
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+                    <Truck className="h-7 w-7 text-primary" />
+                  </div>
+
+                  <h3 className="text-2xl font-semibold">Our Mission</h3>
+
+                  <p className="mt-4 leading-8 text-muted-foreground">
+                    To provide reliable, secure and technology-driven logistics
+                    solutions that make parcel delivery simple for businesses
+                    and individuals while maintaining the highest standards of
+                    speed, transparency and customer satisfaction.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div {...fadeUp}>
+              <Card className="h-full border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <CardContent className="p-8">
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/10">
+                    <Globe className="h-7 w-7 text-orange-500" />
+                  </div>
+
+                  <h3 className="text-2xl font-semibold">Our Vision</h3>
+
+                  <p className="mt-4 leading-8 text-muted-foreground">
+                    To become India's most trusted digital logistics platform by
+                    combining innovation, intelligent automation and exceptional
+                    customer experience into every shipment we deliver.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics */}
+
+      <section className="bg-primary py-20 text-white">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="grid grid-cols-2 gap-8 text-center lg:grid-cols-4">
+            <motion.div {...fadeUp}>
+              <PackageCheck className="mx-auto mb-4 h-10 w-10" />
+
+              <h3 className="text-4xl font-bold">10K+</h3>
+
+              <p className="mt-2 text-white/80">Shipments Processed</p>
+            </motion.div>
+
+            <motion.div {...fadeUp}>
+              <Truck className="mx-auto mb-4 h-10 w-10" />
+
+              <h3 className="text-4xl font-bold">500+</h3>
+
+              <p className="mt-2 text-white/80">Business Partners</p>
+            </motion.div>
+
+            <motion.div {...fadeUp}>
+              <Globe className="mx-auto mb-4 h-10 w-10" />
+
+              <h3 className="text-4xl font-bold">100+</h3>
+
+              <p className="mt-2 text-white/80">Cities Covered</p>
+            </motion.div>
+
+            <motion.div {...fadeUp}>
+              <ShieldCheck className="mx-auto mb-4 h-10 w-10" />
+
+              <h3 className="text-4xl font-bold">99%</h3>
+
+              <p className="mt-2 text-white/80">Customer Satisfaction</p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Values */}
+
+      <section className="py-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <motion.div {...fadeUp} className="mb-12 text-center">
+            <h2 className="text-3xl font-bold">Our Core Values</h2>
+
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              Everything we build and every shipment we deliver is guided by
+              these principles.
+            </p>
+          </motion.div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {values.map((value, index) => (
+              <motion.div
+                key={value.title}
+                initial={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                whileHover={{
+                  y: -8,
+                  scale: 1.02,
+                }}
+                transition={{
+                  delay: index * 0.1,
+                }}
+                viewport={{
+                  once: true,
+                }}
+              >
+                <Card className="h-full border shadow-sm">
+                  <CardContent className="p-6 text-center">
+                    <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+                      <value.icon className="h-8 w-8 text-primary" />
+                    </div>
+
+                    <h3 className="text-xl font-semibold">{value.title}</h3>
+
+                    <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                      {value.desc}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* Why Choose CargoPilot */}
+
+      <section className="bg-muted/30 py-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <motion.div {...fadeUp} className="mb-12 text-center">
+            <h2 className="text-3xl font-bold">Why Choose CargoPilot?</h2>
+
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+              Built with modern technology and customer satisfaction at its
+              core, CargoPilot delivers a smarter logistics experience for
+              individuals and businesses.
+            </p>
+          </motion.div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <Card className="border shadow-sm">
+              <CardContent className="p-6 text-center">
+                <PackageCheck className="mx-auto mb-4 h-10 w-10 text-primary" />
+
+                <h3 className="font-semibold">Real-Time Tracking</h3>
+
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Monitor every shipment from pickup to delivery with live
+                  tracking updates.
+                </p>
               </CardContent>
             </Card>
+
+            <Card className="border shadow-sm">
+              <CardContent className="p-6 text-center">
+                <Truck className="mx-auto mb-4 h-10 w-10 text-primary" />
+
+                <h3 className="font-semibold">Fast Delivery</h3>
+
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Optimized logistics ensure timely deliveries across India.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border shadow-sm">
+              <CardContent className="p-6 text-center">
+                <ShieldCheck className="mx-auto mb-4 h-10 w-10 text-primary" />
+
+                <h3 className="font-semibold">Secure Shipping</h3>
+
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Every shipment is handled safely with complete transparency.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border shadow-sm">
+              <CardContent className="p-6 text-center">
+                <Cpu className="mx-auto mb-4 h-10 w-10 text-primary" />
+
+                <h3 className="font-semibold">Smart Technology</h3>
+
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Automation and intelligent logistics simplify every delivery.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+
+      <section className="py-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <motion.div
+            {...fadeUp}
+            className="mx-auto max-w-4xl rounded-3xl bg-primary px-8 py-16 text-center text-white"
+          >
+            <h2 className="text-4xl font-bold">Ready to Ship Smarter?</h2>
+
+            <p className="mx-auto mt-5 max-w-2xl text-lg text-white/90">
+              Whether you're sending one parcel or managing hundreds of
+              shipments, CargoPilot provides a fast, secure and reliable
+              logistics experience.
+            </p>
+
+            <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+              <Button asChild size="lg" variant="secondary">
+                <Link to="/track">Track Parcel</Link>
+              </Button>
+
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white bg-transparent text-white hover:bg-white hover:text-primary"
+              >
+                <Link to="/contact">Contact Us</Link>
+              </Button>
+            </div>
           </motion.div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
+        </div>
+      </section>
+    </main>
+  );
+};
 
 export default About;

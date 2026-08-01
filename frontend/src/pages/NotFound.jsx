@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 const NotFound = () => {
   const location = useLocation();
+  console.log("404 Not Found: User attempted to access non-existent route:", location, location.pathname);
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);

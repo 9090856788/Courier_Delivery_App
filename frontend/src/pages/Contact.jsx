@@ -1,115 +1,409 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Send, MapPin, Phone, Mail } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Send, Phone, Mail, MapPin, Clock } from "lucide-react";
 
-const contactInfo = [
-  { icon: MapPin, label: 'Address', value: '123 Logistics Hub, Main Boulevard, Lahore, Pakistan' },
-  { icon: Phone, label: 'Phone', value: '+92 300 1234567' },
-  { icon: Mail, label: 'Email', value: 'info@swiftpak.pk' },
-];
+import { Link } from "react-router-dom";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+
+const fadeUp = {
+  initial: {
+    opacity: 0,
+    y: 30,
+  },
+
+  whileInView: {
+    opacity: 1,
+    y: 0,
+  },
+
+  viewport: {
+    once: true,
+  },
+
+  transition: {
+    duration: 0.5,
+  },
+};
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
-  const [sending, setSending] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) {
-      toast({ title: 'Missing fields', description: 'Please fill in all required fields.', variant: 'destructive' });
+
+    if (
+      !form.name.trim() ||
+      !form.email.trim() ||
+      !form.subject.trim() ||
+      !form.message.trim()
+    ) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill all required fields.",
+        variant: "destructive",
+      });
+
       return;
     }
-    setSending(true);
-    setTimeout(() => {
-      setSending(false);
-      toast({ title: 'Message sent!', description: 'We\'ll get back to you within 24 hours.' });
-      setForm({ name: '', email: '', phone: '', message: '' });
-    }, 1500);
+
+    try {
+      setLoading(true);
+
+      // await contactService.send(form);
+
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+
+      toast({
+        title: "Message Sent",
+        description:
+          "Thank you for contacting CargoPilot. We'll get back to you shortly.",
+      });
+
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-20">
-      <div className="container mx-auto px-4 md:px-6">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">Get In Touch</h1>
-          <p className="mt-2 text-muted-foreground">We'd love to hear from you. Send us a message!</p>
-        </motion.div>
+    <main className="pt-24">
+      {/* Hero */}
 
-        <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-            className="lg:col-span-2"
-          >
-            <Card className="border-border/50 shadow-sm">
-              <CardContent className="p-6 md:p-8">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Full Name *</Label>
-                      <Input placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Email *</Label>
-                      <Input type="email" placeholder="your@email.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Phone</Label>
-                    <Input placeholder="+92 XXX XXXXXXX" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Message *</Label>
-                    <Textarea rows={5} placeholder="Tell us how we can help..." value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
-                  </div>
-                  <Button type="submit" disabled={sending} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
-                    {sending ? 'Sending...' : <><Send className="mr-2 h-4 w-4" /> Send Message</>}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+      <section className="py-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <motion.div {...fadeUp} className="mx-auto max-w-3xl text-center">
+            <span className="rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+              Contact Us
+            </span>
+
+            <h1 className="mt-6 text-4xl font-bold leading-tight md:text-6xl">
+              Let's Talk Logistics
+            </h1>
+
+            <p className="mt-6 text-lg leading-8 text-muted-foreground">
+              Have questions about shipments, tracking or business logistics?
+              Our team is always ready to help.
+            </p>
           </motion.div>
+        </div>
+      </section>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="space-y-4"
-          >
-            {contactInfo.map((item) => (
-              <Card key={item.label} className="border-border/50 shadow-sm">
-                <CardContent className="p-5 flex items-start gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                    <item.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-display font-semibold text-sm text-foreground">{item.label}</p>
-                    <p className="text-sm text-muted-foreground">{item.value}</p>
+      {/* Contact Form */}
+
+      <section className="pb-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="grid gap-10 lg:grid-cols-3">
+            <motion.div {...fadeUp} className="lg:col-span-2">
+              <Card>
+                <CardContent className="p-8">
+                  <h2 className="mb-8 text-2xl font-semibold">
+                    Send Us a Message
+                  </h2>
+
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div>
+                        <Label>Full Name *</Label>
+
+                        <Input
+                          name="name"
+                          placeholder="John Doe"
+                          value={form.name}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Email Address *</Label>
+
+                        <Input
+                          type="email"
+                          name="email"
+                          placeholder="john@example.com"
+                          value={form.email}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div>
+                        <Label>Phone Number</Label>
+
+                        <Input
+                          name="phone"
+                          placeholder="+91 XXXXX XXXXX"
+                          value={form.phone}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Subject *</Label>
+
+                        <Input
+                          name="subject"
+                          placeholder="How can we help?"
+                          value={form.subject}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label>Message *</Label>
+
+                      <Textarea
+                        rows={6}
+                        name="message"
+                        placeholder="Write your message..."
+                        value={form.message}
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      size="lg"
+                      disabled={loading}
+                      className="w-full"
+                    >
+                      {loading ? (
+                        "Sending..."
+                      ) : (
+                        <>
+                          <Send className="mr-2 h-4 w-4" />
+                          Send Inquiry
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </motion.div>
+            {/* Contact Information */}
+
+            <motion.div {...fadeUp} className="space-y-6">
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="mb-6 text-2xl font-semibold">
+                    Contact Information
+                  </h2>
+
+                  <div className="space-y-6">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                        <MapPin className="h-5 w-5 text-primary" />
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold">Office Address</h3>
+
+                        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                          CargoPilot Technologies
+                          <br />
+                          Bengaluru, Karnataka
+                          <br />
+                          India
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                        <Phone className="h-5 w-5 text-primary" />
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold">Phone</h3>
+
+                        <a
+                          href="tel:+9118001234567"
+                          className="mt-1 block text-sm text-muted-foreground transition hover:text-primary"
+                        >
+                          +91 1800 123 4567
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                        <Mail className="h-5 w-5 text-primary" />
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold">Email</h3>
+
+                        <a
+                          href="mailto:support@cargopilot.in"
+                          className="mt-1 block text-sm text-muted-foreground transition hover:text-primary"
+                        >
+                          support@cargopilot.in
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                        <Clock className="h-5 w-5 text-primary" />
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold">Business Hours</h3>
+
+                        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                          Monday – Friday
+                          <br />
+                          9:00 AM – 6:00 PM IST
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
-            ))}
 
-            {/* Map placeholder */}
-            <Card className="border-border/50 shadow-sm overflow-hidden">
-              <div className="h-48 bg-muted flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <MapPin className="h-8 w-8 mx-auto mb-2 opacity-40" />
-                  <p className="text-sm">Map Location</p>
-                </div>
-              </div>
-            </Card>
+              {/* Google Map */}
+
+              <Card>
+                <CardContent className="p-0">
+                  <iframe
+                    title="CargoPilot Location"
+                    src="https://www.google.com/maps?q=Bengaluru,Karnataka&output=embed"
+                    className="h-72 w-full rounded-lg border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+
+      <section className="bg-muted/30 py-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <motion.div {...fadeUp} className="mx-auto max-w-4xl">
+            <div className="mb-12 text-center">
+              <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
+
+              <p className="mt-4 text-muted-foreground">
+                Answers to some common questions.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="font-semibold">
+                    How can I track my shipment?
+                  </h3>
+
+                  <p className="mt-3 text-muted-foreground">
+                    Use the tracking number on the Track Parcel page to view
+                    your shipment's latest status.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="font-semibold">
+                    Do you offer business shipping solutions?
+                  </h3>
+
+                  <p className="mt-3 text-muted-foreground">
+                    Yes. CargoPilot provides logistics solutions for businesses
+                    of all sizes with secure and reliable delivery services.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="font-semibold">
+                    How quickly will I receive a response?
+                  </h3>
+
+                  <p className="mt-3 text-muted-foreground">
+                    Our support team usually responds within one business day.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </motion.div>
         </div>
-      </div>
-    </div>
+      </section>
+      {/* CTA */}
+
+      <section className="py-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <motion.div
+            {...fadeUp}
+            className="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-primary"
+          >
+            <div className="px-8 py-14 text-center text-white md:px-16">
+              <h2 className="text-3xl font-bold md:text-4xl">
+                Ready to Ship with CargoPilot?
+              </h2>
+
+              <p className="mx-auto mt-5 max-w-2xl text-lg text-white/90">
+                Whether you're sending a single package or managing business
+                logistics, CargoPilot helps you ship faster, track smarter and
+                deliver with confidence.
+              </p>
+
+              <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+                <Button asChild size="lg" variant="secondary">
+                  <Link to="/track">Track Parcel</Link>
+                </Button>
+
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-white bg-transparent text-white hover:bg-white hover:text-primary"
+                >
+                  <Link to="/calculate">Calculate Shipping</Link>
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </main>
   );
 };
 

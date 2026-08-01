@@ -1,14 +1,23 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
-  Package, Truck, Clock, Globe, Zap, Shield, MapPin, DollarSign,
-  ArrowRight, Star, Search
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import AnimatedCounter from '@/components/AnimatedCounter';
+  Package,
+  Truck,
+  Clock,
+  Globe,
+  Zap,
+  Shield,
+  MapPin,
+  DollarSign,
+  ArrowRight,
+  Star,
+  Search,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import AnimatedCounter from "@/components/shared/AnimatedCounter";
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -18,33 +27,92 @@ const fadeUp = {
 };
 
 const services = [
-  { icon: Zap, title: 'Same Day Delivery', desc: 'Urgent deliveries within the same city, guaranteed same-day.' },
-  { icon: Clock, title: 'Overnight Delivery', desc: 'Send today, deliver tomorrow across Pakistan.' },
-  { icon: Truck, title: 'Standard Delivery', desc: 'Affordable and reliable 2-5 day shipping nationwide.' },
-  { icon: Globe, title: 'International Shipping', desc: 'Global reach with trusted international partners.' },
+  {
+    icon: Zap,
+    title: "Same Day Delivery",
+    desc: "Urgent deliveries within the same city, guaranteed same-day.",
+  },
+  {
+    icon: Clock,
+    title: "Overnight Delivery",
+    desc: "Send today, deliver tomorrow across India.",
+  },
+  {
+    icon: Truck,
+    title: "Standard Delivery",
+    desc: "Affordable and reliable 2-5 day shipping nationwide.",
+  },
+  {
+    icon: Globe,
+    title: "International Shipping",
+    desc: "Global reach with trusted international partners.",
+  },
 ];
 
 const steps = [
-  { num: '01', title: 'Create Shipment', desc: 'Book your parcel online or at any SwiftPak branch.' },
-  { num: '02', title: 'In Transit', desc: 'Your parcel travels securely through our hub network.' },
-  { num: '03', title: 'Delivered', desc: 'Safe delivery to the doorstep with confirmation.' },
+  {
+    num: "01",
+    title: "Create Shipment",
+    desc: "Book your parcel online or at any SwiftPak branch.",
+  },
+  {
+    num: "02",
+    title: "In Transit",
+    desc: "Your parcel travels securely through our hub network.",
+  },
+  {
+    num: "03",
+    title: "Delivered",
+    desc: "Safe delivery to the doorstep with confirmation.",
+  },
 ];
 
 const features = [
-  { icon: MapPin, title: 'Real-time Tracking', desc: 'Track every step of your parcel journey.' },
-  { icon: Shield, title: 'Secure Delivery', desc: 'End-to-end protection for your packages.' },
-  { icon: Globe, title: 'Nationwide Network', desc: 'Covering 200+ cities across Pakistan.' },
-  { icon: DollarSign, title: 'Affordable Pricing', desc: 'Competitive rates without hidden fees.' },
+  {
+    icon: MapPin,
+    title: "Real-time Tracking",
+    desc: "Track every step of your parcel journey.",
+  },
+  {
+    icon: Shield,
+    title: "Secure Delivery",
+    desc: "End-to-end protection for your packages.",
+  },
+  {
+    icon: Globe,
+    title: "Nationwide Network",
+    desc: "Covering 200+ cities across Pakistan.",
+  },
+  {
+    icon: DollarSign,
+    title: "Affordable Pricing",
+    desc: "Competitive rates without hidden fees.",
+  },
 ];
 
 const testimonials = [
-  { name: 'Ahmed Khan', city: 'Lahore', text: 'SwiftPak delivered my package from Lahore to Karachi in just one day. Incredible speed!', rating: 5 },
-  { name: 'Fatima Noor', city: 'Islamabad', text: 'Very reliable and the tracking updates are always accurate. Highly recommended.', rating: 5 },
-  { name: 'Ali Raza', city: 'Karachi', text: 'Best rates in the market and their customer support is outstanding.', rating: 4 },
+  {
+    name: "Ahmed Khan",
+    city: "Lahore",
+    text: "SwiftPak delivered my package from Lahore to Karachi in just one day. Incredible speed!",
+    rating: 5,
+  },
+  {
+    name: "Fatima Noor",
+    city: "Islamabad",
+    text: "Very reliable and the tracking updates are always accurate. Highly recommended.",
+    rating: 5,
+  },
+  {
+    name: "Ali Raza",
+    city: "Karachi",
+    text: "Best rates in the market and their customer support is outstanding.",
+    rating: 4,
+  },
 ];
 
-const Index = () => {
-  const [trackingId, setTrackingId] = useState('');
+const Home = () => {
+  const [trackingId, setTrackingId] = useState("");
   const navigate = useNavigate();
 
   const handleQuickTrack = () => {
@@ -66,20 +134,29 @@ const Index = () => {
                 🚀 World's Fastest Courier Service
               </span>
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight">
-                Fast & Reliable Parcel Delivery{' '}
+                Fast & Reliable Parcel Delivery{" "}
                 <span className="text-primary">Across Pakistan</span>
               </h1>
               <p className="mt-6 text-lg text-muted-foreground max-w-lg leading-relaxed">
-                From Karachi to Dubai, SwiftPak delivers your parcels safely and on time. Same-day, overnight, and standard delivery options available.
+                From Karachi to Dubai, SwiftPak delivers your parcels safely and
+                on time. Same-day, overnight, and standard delivery options
+                available.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link to="/track">
-                  <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
+                  <Button
+                    size="lg"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
+                  >
                     <Search className="mr-2 h-4 w-4" /> Track Parcel
                   </Button>
                 </Link>
                 <Link to="/calculate">
-                  <Button size="lg" variant="outline" className="font-semibold border-primary/20">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="font-semibold border-primary/20"
+                  >
                     <DollarSign className="mr-2 h-4 w-4" /> Calculate Cost
                   </Button>
                 </Link>
@@ -95,7 +172,10 @@ const Index = () => {
             >
               <div className="relative w-80 h-80">
                 {/* Path */}
-                <svg viewBox="0 0 320 320" className="absolute inset-0 w-full h-full">
+                <svg
+                  viewBox="0 0 320 320"
+                  className="absolute inset-0 w-full h-full"
+                >
                   <motion.path
                     d="M 40 280 Q 160 40 280 280"
                     fill="none"
@@ -110,26 +190,40 @@ const Index = () => {
                     strokeWidth="3"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
-                    transition={{ duration: 2.5, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1 }}
+                    transition={{
+                      duration: 2.5,
+                      ease: "easeInOut",
+                      repeat: Infinity,
+                      repeatDelay: 1,
+                    }}
                   />
                 </svg>
                 {/* Origin pin */}
                 <div className="absolute bottom-6 left-4 flex flex-col items-center">
                   <MapPin className="h-8 w-8 text-primary" />
-                  <span className="text-xs font-medium text-primary mt-1">Lahore</span>
+                  <span className="text-xs font-medium text-primary mt-1">
+                    Lahore
+                  </span>
                 </div>
                 {/* Destination pin */}
                 <div className="absolute bottom-6 right-4 flex flex-col items-center">
                   <MapPin className="h-8 w-8 text-accent" />
-                  <span className="text-xs font-medium text-accent mt-1">Karachi</span>
+                  <span className="text-xs font-medium text-accent mt-1">
+                    Karachi
+                  </span>
                 </div>
                 {/* Moving parcel */}
                 <motion.div
                   className="absolute"
                   animate={{
-                    offsetDistance: ['0%', '100%'],
+                    offsetDistance: ["0%", "100%"],
                   }}
-                  transition={{ duration: 3, ease: 'easeInOut', repeat: Infinity, repeatDelay: 0.5 }}
+                  transition={{
+                    duration: 3,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatDelay: 0.5,
+                  }}
                   style={{
                     offsetPath: 'path("M 40 280 Q 160 40 280 280")',
                   }}
@@ -148,8 +242,12 @@ const Index = () => {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div {...fadeUp} className="text-center mb-14">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Our Services</h2>
-            <p className="mt-3 text-muted-foreground max-w-md mx-auto">Tailored delivery solutions for every need</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+              Our Services
+            </h2>
+            <p className="mt-3 text-muted-foreground max-w-md mx-auto">
+              Tailored delivery solutions for every need
+            </p>
           </motion.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((s, i) => (
@@ -166,7 +264,9 @@ const Index = () => {
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 mb-4">
                       <s.icon className="h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="font-display font-semibold text-foreground mb-2">{s.title}</h3>
+                    <h3 className="font-display font-semibold text-foreground mb-2">
+                      {s.title}
+                    </h3>
                     <p className="text-sm text-muted-foreground">{s.desc}</p>
                   </CardContent>
                 </Card>
@@ -180,8 +280,12 @@ const Index = () => {
       <section className="py-20 gradient-hero">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div {...fadeUp} className="text-center mb-14">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">How It Works</h2>
-            <p className="mt-3 text-muted-foreground">Three simple steps to ship your parcel</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+              How It Works
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              Three simple steps to ship your parcel
+            </p>
           </motion.div>
           <div className="grid md:grid-cols-3 gap-8">
             {steps.map((step, i) => (
@@ -201,13 +305,15 @@ const Index = () => {
                     <motion.div
                       className="h-full bg-accent"
                       initial={{ width: 0 }}
-                      whileInView={{ width: '100%' }}
+                      whileInView={{ width: "100%" }}
                       viewport={{ once: true }}
                       transition={{ duration: 1, delay: 0.5 + i * 0.3 }}
                     />
                   </div>
                 )}
-                <h3 className="font-display font-semibold text-foreground mb-2">{step.title}</h3>
+                <h3 className="font-display font-semibold text-foreground mb-2">
+                  {step.title}
+                </h3>
                 <p className="text-sm text-muted-foreground">{step.desc}</p>
               </motion.div>
             ))}
@@ -222,16 +328,21 @@ const Index = () => {
             <h2 className="font-display text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
               Track Your Parcel
             </h2>
-            <p className="text-primary-foreground/70 mb-6">Enter your tracking ID to get instant updates</p>
+            <p className="text-primary-foreground/70 mb-6">
+              Enter your tracking ID to get instant updates
+            </p>
             <div className="flex max-w-md mx-auto gap-2">
               <Input
                 placeholder="Enter Tracking ID"
                 value={trackingId}
                 onChange={(e) => setTrackingId(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleQuickTrack()}
+                onKeyDown={(e) => e.key === "Enter" && handleQuickTrack()}
                 className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50"
               />
-              <Button onClick={handleQuickTrack} className="bg-accent text-accent-foreground hover:bg-accent/90 shrink-0">
+              <Button
+                onClick={handleQuickTrack}
+                className="bg-accent text-accent-foreground hover:bg-accent/90 shrink-0"
+              >
                 Track <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
             </div>
@@ -243,7 +354,9 @@ const Index = () => {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div {...fadeUp} className="text-center mb-14">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">Why Choose SwiftPak?</h2>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+              Why Choose SwiftPak?
+            </h2>
           </motion.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((f, i) => (
@@ -258,7 +371,9 @@ const Index = () => {
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 mb-4">
                   <f.icon className="h-7 w-7 text-accent" />
                 </div>
-                <h3 className="font-display font-semibold text-foreground mb-2">{f.title}</h3>
+                <h3 className="font-display font-semibold text-foreground mb-2">
+                  {f.title}
+                </h3>
                 <p className="text-sm text-muted-foreground">{f.desc}</p>
               </motion.div>
             ))}
@@ -270,7 +385,9 @@ const Index = () => {
       <section className="py-20 gradient-hero">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div {...fadeUp} className="text-center mb-14">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">What Our Customers Say</h2>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+              What Our Customers Say
+            </h2>
           </motion.div>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
@@ -285,12 +402,19 @@ const Index = () => {
                   <CardContent className="p-6">
                     <div className="flex gap-1 mb-3">
                       {Array.from({ length: t.rating }).map((_, j) => (
-                        <Star key={j} className="h-4 w-4 fill-accent text-accent" />
+                        <Star
+                          key={j}
+                          className="h-4 w-4 fill-accent text-accent"
+                        />
                       ))}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-4">"{t.text}"</p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      "{t.text}"
+                    </p>
                     <div>
-                      <p className="font-display font-semibold text-foreground text-sm">{t.name}</p>
+                      <p className="font-display font-semibold text-foreground text-sm">
+                        {t.name}
+                      </p>
                       <p className="text-xs text-muted-foreground">{t.city}</p>
                     </div>
                   </CardContent>
@@ -305,7 +429,11 @@ const Index = () => {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            <AnimatedCounter end={500000} suffix="+" label="Parcels Delivered" />
+            <AnimatedCounter
+              end={500000}
+              suffix="+"
+              label="Parcels Delivered"
+            />
             <AnimatedCounter end={200} suffix="+" label="Cities Covered" />
             <AnimatedCounter end={50000} suffix="+" label="Happy Customers" />
             <AnimatedCounter end={99} suffix="%" label="On-time Delivery" />
@@ -316,4 +444,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Home;

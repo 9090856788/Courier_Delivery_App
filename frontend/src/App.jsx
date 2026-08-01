@@ -2,9 +2,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import Index from "./pages/Index";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import Home from "./pages/Home";
 import TrackParcel from "./pages/TrackParcel";
 import CalculateCost from "./pages/CalculateCost";
 import About from "./pages/About";
@@ -18,7 +18,7 @@ const App = () => (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Index />} />
+        <Route path="/" element={<Home />} />
         <Route path="/track" element={<TrackParcel />} />
         <Route path="/calculate" element={<CalculateCost />} />
         <Route path="/about" element={<About />} />
