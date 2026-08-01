@@ -5,7 +5,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { businessSolutions } from "./data";
+import { businessSolutions, businessBenefits } from "./data";
 
 const fadeUp = {
   initial: {
@@ -57,10 +57,7 @@ const BusinessSolutions = () => {
 
             <div className="mt-8 space-y-4">
               {benefits.map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-3"
-                >
+                <div key={item} className="flex items-center gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary" />
 
                   <span>{item}</span>
@@ -68,14 +65,9 @@ const BusinessSolutions = () => {
               ))}
             </div>
 
-            <Button
-              asChild
-              size="lg"
-              className="mt-10"
-            >
+            <Button asChild size="lg" className="mt-10">
               <Link to="/contact">
                 Contact Sales
-
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -83,10 +75,7 @@ const BusinessSolutions = () => {
 
           {/* Right */}
 
-          <motion.div
-            {...fadeUp}
-            className="grid gap-5 sm:grid-cols-2"
-          >
+          <motion.div {...fadeUp} className="grid gap-5 sm:grid-cols-2">
             {businessSolutions.map((item) => {
               const Icon = item.icon;
 
@@ -100,9 +89,7 @@ const BusinessSolutions = () => {
                       <Icon className="h-7 w-7 text-primary transition-colors group-hover:text-white" />
                     </div>
 
-                    <h3 className="text-xl font-semibold">
-                      {item.title}
-                    </h3>
+                    <h3 className="text-xl font-semibold">{item.title}</h3>
 
                     <p className="mt-3 leading-7 text-muted-foreground">
                       {item.description}

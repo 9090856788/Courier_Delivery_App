@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 import { Card, CardContent } from "@/components/ui/card";
 
-import { features } from "./data";
+import { features, highlights } from "./data";
 
 const fadeUp = {
   initial: {
