@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { calculateCostThunk } from "@/features/parcels/parcelSlice";
+// import { calculateCostThunk } from "@/features/parcels/parcelSlice";
 import {
   getDestinationOptionsForShipmentType,
   isValidDestinationForShipmentType,
