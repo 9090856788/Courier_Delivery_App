@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "Courier Backend Management System",
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
@@ -9,7 +9,7 @@
     "dev": "nodemon server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kanhu Charan Sahoo",
   "license": "ISC",
   "description": "",
   "dependencies": {

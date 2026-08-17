@@ -82,22 +82,9 @@ const parcelSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    parcelWeight: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    parcelPrice: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
+
     checkPoints: [checkPointSchema],
-    shipmentType: {
-      type: String,
-      enum: ["National", "International"],
-      required: true,
-    },
+
     originCity: {
       type: String,
       required: true,
@@ -108,14 +95,9 @@ const parcelSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    deliveryType: {
+    shipmentType: {
       type: String,
-      enum: ["standard", "express", "same_day", "overnight"],
-      required: true,
-    },
-    parcelSize: {
-      type: String,
-      enum: ["small", "medium", "large"],
+      enum: ["National", "International"],
       required: true,
     },
     parcelCategory: {
@@ -135,6 +117,27 @@ const parcelSchema = new mongoose.Schema(
       ],
       required: true,
     },
+    deliveryType: {
+      type: String,
+      enum: ["standard", "sameDay", "overnight"],
+      required: true,
+    },
+    parcelWeight: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    parcelPrice: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    parcelSize: {
+      type: String,
+      enum: ["small", "medium", "large"],
+      required: true,
+    },
+
     parcelDescription: {
       type: String,
       trim: true,

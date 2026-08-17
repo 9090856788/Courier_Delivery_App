@@ -1,5 +1,53 @@
 import { Parcel } from "../models/parcelSchema.js";
+import { calculateCost } from "../services/calculateCost.js";
+import { generateTrackingId } from "../services/generateTrackingId.js";
+import { createParcelSchema } from "../validations/validations.js";
 
-export const createParcel = async (req, resizeBy, next) => {
-  
+export const createParcel = async (req, res, next) => {
+  try {
+    const { error, value } = createParcelSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details[0].message || "There is some error occurs",
+      });
+    }
+
+    const priceInfo = calculateCost({
+      originCity: value.originCity,
+      destinationCity: value.destinationCity,
+      shipmentType: value.shipmentType,
+      parcelCategory: value.parcelCategory,
+      deliveryType: value.deliveryType,
+      parcelWeight: value.parcelWeight,
+      // parcelPrice: value.parcelPrice,
+    });
+
+    let trackingId = generateTrackingId();
+    if (!trackingId) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to generate unique tracking id",
+      });
+    }
+
+    const parcel = await Parcel.create({
+      ...value,
+      trackingId,
+      price: priceInfo.parcelPrice,
+      checkPoints: [
+        {
+          location: value.originCity,
+          status: "arrived",
+          title: `Parcel arrived at ${value.originCity} Branch`,
+          description: `Your parcel has been arrived at ${value.originCity} Branch & is being processed for the next step in it's Journey.`,
+          updatedBy: req.user ? req.user.name : "System",
+        },
+      ],
+    });
+    res.status(201).json(parcel);
+  } catch (error) {
+    next(error);
+  }
 };
