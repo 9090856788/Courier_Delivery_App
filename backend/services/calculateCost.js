@@ -4,33 +4,45 @@ const DELIVERY_TYPE_CHARGES = {
   overnight: 80,
 };
 
-// National shipment category adjustments
+/* -------------------------------------------------------------------------- */
+/*                    National Category Charges                              */
+/* -------------------------------------------------------------------------- */
+
 const NATIONAL_CATEGORY_CHARGES = {
-  document: 100,
+  documents: 100,
   electronics: 150,
-  fragile: 250,
   clothing: 0,
+  fragile: 250,
   food: 120,
   medicine: 150,
   cosmetics: 100,
   books: 20,
   small_package: 100,
   large_package: 250,
+  other: 0,
 };
 
-// International shipment category adjustments (higher charges)
+/* -------------------------------------------------------------------------- */
+/*                 International Category Charges                            */
+/* -------------------------------------------------------------------------- */
+
 const INTERNATIONAL_CATEGORY_CHARGES = {
-  document: 700,
+  documents: 700,
   electronics: 2000,
-  fragile: 3500,
   clothing: 500,
+  fragile: 3500,
   food: 1500,
   medicine: 1800,
   cosmetics: 1000,
   books: 500,
   small_package: 700,
   large_package: 3500,
+  other: 0,
 };
+
+/* -------------------------------------------------------------------------- */
+/*                           Calculate Cost                                  */
+/* -------------------------------------------------------------------------- */
 
 export const calculateCost = ({
   originCity,
@@ -40,64 +52,113 @@ export const calculateCost = ({
   deliveryType,
   parcelWeight,
 }) => {
+  /* ------------------------------------------------------------------------ */
+  /*                              Validation                                  */
+  /* ------------------------------------------------------------------------ */
+
+  if (!originCity || !destinationCity) {
+    throw new Error("Origin city and destination city are required");
+  }
+
+  if (!parcelWeight || parcelWeight <= 0) {
+    throw new Error("Parcel weight must be greater than 0");
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /*                              Normalize                                   */
+  /* ------------------------------------------------------------------------ */
+
+  const normalizedShipmentType = shipmentType?.trim().toLowerCase();
+
+  const normalizedCategory = parcelCategory?.trim().toLowerCase();
+
+  const normalizedDeliveryType = deliveryType?.trim();
+
+  /* ------------------------------------------------------------------------ */
+  /*                         Same City Check                                  */
+  /* ------------------------------------------------------------------------ */
+
   const isSameCity =
     originCity.trim().toLowerCase() === destinationCity.trim().toLowerCase();
 
-  const deliveryTypeCharge = DELIVERY_TYPE_CHARGES[deliveryType] || 0;
+  /* ------------------------------------------------------------------------ */
+  /*                      Delivery Type Charge                                */
+  /* ------------------------------------------------------------------------ */
 
-  // National shipment cost calculation
-  if (shipmentType === "national") {
-    const categoryCharge = NATIONAL_CATEGORY_CHARGES[parcelCategory] || 0;
+  const deliveryTypeCharge = DELIVERY_TYPE_CHARGES[normalizedDeliveryType];
 
-    if (isSameCity) {
-      const basePrice = 50;
-      const weightPrice = parcelWeight * 500;
-      const price =
-        basePrice + weightPrice + categoryCharge + deliveryTypeCharge;
+  if (deliveryTypeCharge === undefined) {
+    throw new Error("Invalid delivery type");
+  }
 
-      return {
-        type: "national",
-        parcelCategory,
-        price,
-      };
+  /* ------------------------------------------------------------------------ */
+  /*                         National Shipment                                */
+  /* ------------------------------------------------------------------------ */
+
+  if (normalizedShipmentType === "national") {
+    const categoryCharge = NATIONAL_CATEGORY_CHARGES[normalizedCategory];
+
+    if (categoryCharge === undefined) {
+      throw new Error("Invalid parcel category");
     }
 
-    // out of city
-    const basePrice = 100;
+    const basePrice = isSameCity ? 50 : 100;
+
     const weightPrice = parcelWeight * 500;
-    const price = basePrice + weightPrice + categoryCharge + deliveryTypeCharge;
+
+    const parcelPrice =
+      basePrice + weightPrice + categoryCharge + deliveryTypeCharge;
 
     return {
-      type: "national ",
-      parcelCategory,
-      price,
+      shipmentType: "National",
+      parcelCategory: normalizedCategory,
+      parcelPrice,
     };
   }
 
-  // International shipment calculation
-  if (shipmentType === "international") {
-    const categoryCharge = INTERNATIONAL_CATEGORY_CHARGES[parcelCategory] || 0;
+  /* ------------------------------------------------------------------------ */
+  /*                      International Shipment                              */
+  /* ------------------------------------------------------------------------ */
 
-    if (parcelWeight <= 0) {
-      throw new Error("Parcel weight must be greater than 0");
+  if (normalizedShipmentType === "international") {
+    const categoryCharge = INTERNATIONAL_CATEGORY_CHARGES[normalizedCategory];
+
+    if (categoryCharge === undefined) {
+      throw new Error("Invalid parcel category");
     }
 
-    let price;
+    let parcelPrice;
+
+    /* ---------------------------------------------------------------------- */
+    /*                        Base Weight Pricing                             */
+    /* ---------------------------------------------------------------------- */
+
     if (parcelWeight <= 0.5) {
-      price = 7500;
+      parcelPrice = 7500;
     } else if (parcelWeight <= 1) {
-      price = 13500;
+      parcelPrice = 13500;
     } else {
       const extraKG = Math.ceil(parcelWeight - 1);
-      price = 13500 + extraKG * 7500;
+
+      parcelPrice = 13500 + extraKG * 7500;
     }
-    price = price + categoryCharge;
+
+    /* ---------------------------------------------------------------------- */
+    /*                       Category Adjustment                              */
+    /* ---------------------------------------------------------------------- */
+
+    parcelPrice += categoryCharge;
 
     return {
-      type: "international",
-      parcelCategory,
-      price,
+      shipmentType: "International",
+      parcelCategory: normalizedCategory,
+      parcelPrice,
     };
   }
+
+  /* ------------------------------------------------------------------------ */
+  /*                         Invalid Shipment                                 */
+  /* ------------------------------------------------------------------------ */
+
   throw new Error("Invalid shipment configuration");
 };

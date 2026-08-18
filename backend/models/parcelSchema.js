@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 
+/* -------------------------------------------------------------------------- */
+/*                           Checkpoint Schema                                */
+/* -------------------------------------------------------------------------- */
+
 const checkPointSchema = new mongoose.Schema(
   {
     location: {
@@ -7,11 +11,13 @@ const checkPointSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     title: {
       type: String,
       required: true,
       trim: true,
     },
+
     description: {
       type: String,
       trim: true,
@@ -28,78 +34,117 @@ const checkPointSchema = new mongoose.Schema(
       ],
       required: true,
     },
-  },
-  {
-    timestamps: {
-      type: Date,
-      default: Date.now,
-    },
+
     updatedBy: {
       type: String,
       required: true,
       trim: true,
     },
   },
+  {
+    timestamps: true,
+  },
 );
 
-export const CheckPoint = mongoose.model("checkPoint", checkPointSchema);
+export const CheckPoint = mongoose.model("CheckPoint", checkPointSchema);
+
+/* -------------------------------------------------------------------------- */
+/*                             Parcel Schema                                  */
+/* -------------------------------------------------------------------------- */
 
 const parcelSchema = new mongoose.Schema(
   {
+    /* ---------------------------------------------------------------------- */
+    /*                            Tracking                                     */
+    /* ---------------------------------------------------------------------- */
+
     trackingId: {
       type: String,
       required: true,
       unique: true,
       trim: true,
+      index: true,
     },
+
+    /* ---------------------------------------------------------------------- */
+    /*                              Sender                                     */
+    /* ---------------------------------------------------------------------- */
+
     senderName: {
       type: String,
       required: true,
       trim: true,
     },
+
     senderPhoneNumber: {
       type: String,
       required: true,
       trim: true,
     },
+
     senderAddress: {
       type: String,
       required: true,
       trim: true,
     },
+
+    /* ---------------------------------------------------------------------- */
+    /*                             Receiver                                    */
+    /* ---------------------------------------------------------------------- */
+
     receiverName: {
       type: String,
       required: true,
       trim: true,
     },
+
     receiverPhoneNumber: {
       type: String,
       required: true,
       trim: true,
     },
+
     receiverAddress: {
       type: String,
       required: true,
       trim: true,
     },
 
-    checkPoints: [checkPointSchema],
+    /* ---------------------------------------------------------------------- */
+    /*                            Checkpoints                                  */
+    /* ---------------------------------------------------------------------- */
+
+    checkPoints: {
+      type: [checkPointSchema],
+      default: [],
+    },
+
+    /* ---------------------------------------------------------------------- */
+    /*                              Route                                      */
+    /* ---------------------------------------------------------------------- */
 
     originCity: {
       type: String,
       required: true,
       trim: true,
     },
+
     destinationCity: {
       type: String,
       required: true,
       trim: true,
     },
+
+    /* ---------------------------------------------------------------------- */
+    /*                           Shipment Info                                 */
+    /* ---------------------------------------------------------------------- */
+
     shipmentType: {
       type: String,
       enum: ["National", "International"],
       required: true,
     },
+
     parcelCategory: {
       type: String,
       enum: [
@@ -117,21 +162,29 @@ const parcelSchema = new mongoose.Schema(
       ],
       required: true,
     },
+
     deliveryType: {
       type: String,
       enum: ["standard", "sameDay", "overnight"],
       required: true,
     },
+
+    /* ---------------------------------------------------------------------- */
+    /*                            Parcel Details                               */
+    /* ---------------------------------------------------------------------- */
+
     parcelWeight: {
       type: Number,
       required: true,
       min: 0,
     },
+
     parcelPrice: {
       type: Number,
       required: true,
       min: 0,
     },
+
     parcelSize: {
       type: String,
       enum: ["small", "medium", "large"],
@@ -142,15 +195,22 @@ const parcelSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+
     deliveryDate: {
       type: Date,
       required: true,
     },
+
+    /* ---------------------------------------------------------------------- */
+    /*                              Audit                                      */
+    /* ---------------------------------------------------------------------- */
+
     createdBy: {
       type: String,
       required: true,
       trim: true,
     },
+
     updatedBy: {
       type: String,
       required: true,
@@ -162,4 +222,4 @@ const parcelSchema = new mongoose.Schema(
   },
 );
 
-export const Parcel = mongoose.model("parcel", parcelSchema);
+export const Parcel = mongoose.model("Parcel", parcelSchema);

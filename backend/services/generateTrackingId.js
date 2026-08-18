@@ -1,5 +1,7 @@
 export const generateTrackingId = () => {
-  const timestamp = Date.now().toString().slice(-6);
-  const random = Math.random(100 + Math.random() * 900);
-  return `IND-${timestamp}${random}`;
+  const timestamp = Date.now().toString().slice(-8);
+
+  const randomNumber = Math.floor(1000 + Math.random() * 9000);
+
+  return `IND-${timestamp}-${randomNumber}`;
 };
