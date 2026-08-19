@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-
 dotenv.config();
 
 import express from "express";
@@ -14,7 +13,6 @@ import dbConnect from "./db/dbConnection.js";
 import swaggerSpec from "./config/swagger.js";
 
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
-
 import { authLimiter, globalAPILimiter } from "./middlewares/rateLimiter.js";
 
 /* -------------------------------------------------------------------------- */

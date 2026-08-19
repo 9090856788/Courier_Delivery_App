@@ -1,6 +1,9 @@
 import express from "express";
 
-import { createParcel } from "../controllers/parcelController.js";
+import {
+  createParcel,
+  getParcelByTrackingId,
+} from "../controllers/parcelController.js";
 
 import { protect, adminOnly } from "../middlewares/authMiddleware.js";
 
@@ -412,5 +415,54 @@ const router = express.Router();
  *         description: Internal server error.
  */
 router.post("/", protect, adminOnly, createParcel);
+
+/**
+ * @swagger
+ * /api/parcels/track/{trackingId}:
+ *   get:
+ *     summary: Get parcel by tracking ID
+ *     description: >
+ *       Public endpoint that retrieves parcel tracking information using
+ *       the parcel tracking ID. Authentication is not required.
+ *
+ *     tags:
+ *       - Parcels
+ *
+ *     parameters:
+ *       - in: path
+ *         name: trackingId
+ *         required: true
+ *         description: Unique tracking ID of the parcel.
+ *         schema:
+ *           type: string
+ *         example: "IND-18273645-4821"
+ *
+ *     responses:
+ *       200:
+ *         description: Parcel retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Parcel'
+ *
+ *       404:
+ *         description: Parcel is not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Parcel is not found."
+ *
+ *       500:
+ *         description: Internal server error.
+ */
+
+router.get("/track/:trackingId", getParcelByTrackingId);
 
 export default router;
