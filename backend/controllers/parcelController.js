@@ -1,6 +1,7 @@
 import { Parcel } from "../models/parcelSchema.js";
 import { calculateCost } from "../services/calculateCost.js";
 import { generateTrackingId } from "../services/generateTrackingId.js";
+
 import {
   addCheckPointSchema,
   createParcelSchema,
@@ -78,10 +79,23 @@ export const createParcel = async (req, res, next) => {
 
     const parcel = await Parcel.create({
       ...value,
+
       trackingId,
-      parcelPrice: priceInfo.parcelPrice,
+
+      /*
+       * calculateCost() returns:
+       * {
+       *   type,
+       *   parcelCategory,
+       *   price
+       * }
+       */
+      parcelPrice: priceInfo.price,
+
       checkPoints: [initialCheckPoint],
+
       createdBy: req.user?._id?.toString() || "System",
+
       updatedBy: req.user?._id?.toString() || "System",
     });
 
@@ -110,10 +124,17 @@ export const createParcel = async (req, res, next) => {
   }
 };
 
+/* -------------------------------------------------------------------------- */
+/*                       Get Parcel By Tracking ID                            */
+/* -------------------------------------------------------------------------- */
+
 export const getParcelByTrackingId = async (req, res, next) => {
   try {
     const { trackingId } = req.params;
-    const parcel = await Parcel.findOne({ trackingId });
+
+    const parcel = await Parcel.findOne({
+      trackingId: trackingId.trim(),
+    });
 
     if (!parcel) {
       return res.status(404).json({
@@ -121,7 +142,8 @@ export const getParcelByTrackingId = async (req, res, next) => {
         message: "Parcel is not found.",
       });
     }
-    res.status(200).json({
+
+    return res.status(200).json({
       success: true,
       message: "Parcel retrieved successfully",
       data: parcel,
@@ -131,22 +153,38 @@ export const getParcelByTrackingId = async (req, res, next) => {
   }
 };
 
+/* -------------------------------------------------------------------------- */
+/*                           Add Checkpoint                                   */
+/* -------------------------------------------------------------------------- */
+
 export const addCheckPoints = async (req, res, next) => {
   try {
     const { trackingId } = req.params;
+
+    /* ---------------------------------------------------------------------- */
+    /*                         Validate Request                               */
+    /* ---------------------------------------------------------------------- */
+
     const { error, value } = addCheckPointSchema.validate(req.body, {
       abortEarly: true,
       stripUnknown: true,
     });
+
     if (error) {
       return res.status(400).json({
         success: false,
         message: error.details[0].message,
       });
     }
+
+    /* ---------------------------------------------------------------------- */
+    /*                            Find Parcel                                 */
+    /* ---------------------------------------------------------------------- */
+
     const parcel = await Parcel.findOne({
       trackingId: trackingId.trim(),
     });
+
     if (!parcel) {
       return res.status(404).json({
         success: false,
@@ -158,13 +196,145 @@ export const addCheckPoints = async (req, res, next) => {
       updatedBy: req.user ? req.user.name : "system",
     };
 
-    parcel.checkPoints.push(checkpoints);
+    /* ---------------------------------------------------------------------- */
+    /*                           Add Checkpoint                                */
+    /* ---------------------------------------------------------------------- */
+
+    parcel.checkPoints.push(checkpoint);
+
+    /* ---------------------------------------------------------------------- */
+    /*                         Update Parcel Audit                             */
+    /* ---------------------------------------------------------------------- */
+
+    parcel.updatedBy = req.user?._id?.toString() || "System";
+
     await parcel.save();
+
+    /* ---------------------------------------------------------------------- */
+    /*                            Response                                    */
+    /* ---------------------------------------------------------------------- */
 
     return res.status(201).json({
       success: true,
       message: "Checkpoint added successfully",
       data: parcel,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* -------------------------------------------------------------------------- */
+/*                           Get All Parcels                                  */
+/* -------------------------------------------------------------------------- */
+
+export const getAllParcels = async (req, res, next) => {
+  try {
+    /* ---------------------------------------------------------------------- */
+    /*                           Query Parameters                             */
+    /* ---------------------------------------------------------------------- */
+
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+
+    const limit = Math.min(
+      Math.max(parseInt(req.query.limit, 10) || 10, 1),
+      100,
+    );
+
+    const status = req.query.status?.trim();
+
+    const search = req.query.search?.trim();
+
+    /* ---------------------------------------------------------------------- */
+    /*                              Build Query                               */
+    /* ---------------------------------------------------------------------- */
+
+    const query = {};
+
+    /* ---------------------------------------------------------------------- */
+    /*                         Status Filter                                  */
+    /* ---------------------------------------------------------------------- */
+
+    /*
+     * Parcel does not have a top-level `status` field.
+     *
+     * Status is stored inside:
+     *
+     * checkPoints[].status
+     *
+     * Therefore we query the embedded checkpoints.
+     */
+    if (status) {
+      const allowedStatuses = [
+        "arrived",
+        "in_transit",
+        "delayed",
+        "out_for_delivery",
+        "delivered",
+      ];
+
+      if (!allowedStatuses.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid parcel status.",
+        });
+      }
+
+      query["checkPoints.status"] = status;
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                         Tracking ID Search                             */
+    /* ---------------------------------------------------------------------- */
+
+    if (search) {
+      query.trackingId = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    /* ---------------------------------------------------------------------- */
+    /*                              Pagination                                */
+    /* ---------------------------------------------------------------------- */
+
+    const skip = (page - 1) * limit;
+
+    /* ---------------------------------------------------------------------- */
+    /*                         Database Queries                               */
+    /* ---------------------------------------------------------------------- */
+
+    const [parcels, total] = await Promise.all([
+      Parcel.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+
+      Parcel.countDocuments(query),
+    ]);
+
+    /* ---------------------------------------------------------------------- */
+    /*                         Pagination Data                                */
+    /* ---------------------------------------------------------------------- */
+
+    const totalPages = Math.ceil(total / limit);
+
+    /* ---------------------------------------------------------------------- */
+    /*                              Response                                  */
+    /* ---------------------------------------------------------------------- */
+
+    return res.status(200).json({
+      success: true,
+
+      message: "Fetched all parcel records successfully",
+
+      data: parcels,
+
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
     });
   } catch (error) {
     next(error);

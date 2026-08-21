@@ -3,6 +3,7 @@ import express from "express";
 import {
   addCheckPoints,
   createParcel,
+  getAllParcels,
   getParcelByTrackingId,
 } from "../controllers/parcelController.js";
 
@@ -548,4 +549,79 @@ router.get("/track/:trackingId", getParcelByTrackingId);
  *         description: Internal server error.
  */
 router.post("/:trackingId/checkpoints", protect, adminOnly, addCheckPoints);
+
+/**
+ * @swagger
+ * /api/parcels:
+ *   get:
+ *     summary: Get all parcels
+ *     description: >
+ *       Retrieves a paginated list of all parcel records.
+ *       Supports filtering by shipment status and searching by tracking ID.
+ *       Only authenticated administrators can access this endpoint.
+ *
+ *     tags:
+ *       - Parcels
+ *
+ *     security:
+ *       - bearerAuth: []
+ *
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         description: Page number.
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         example: 1
+ *
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Number of parcels to return per page.
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 10
+ *         example: 10
+ *
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         description: Filter parcels by shipment status.
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - arrived
+ *             - in_transit
+ *             - delayed
+ *             - out_for_delivery
+ *             - delivered
+ *         example: in_transit
+ *
+ *       - in: query
+ *         name: search
+ *         required: false
+ *         description: Search parcels by tracking ID.
+ *         schema:
+ *           type: string
+ *         example: IND-123456
+ *
+ *     responses:
+ *       200:
+ *         description: Parcel records fetched successfully.
+ *
+ *       401:
+ *         description: Authentication required.
+ *
+ *       403:
+ *         description: Administrator access required.
+ *
+ *       500:
+ *         description: Internal server error.
+ */
+router.get("/", protect, adminOnly, getAllParcels);
+
 export default router;
