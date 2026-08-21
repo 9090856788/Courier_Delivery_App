@@ -114,3 +114,17 @@ export const createParcelSchema = joi.object({
 
   deliveryDate: joi.date().iso().required(),
 });
+
+/* -------------------------------------------------------------------------- */
+/*                       Add Checkpoint Validation                            */
+/* -------------------------------------------------------------------------- */
+
+export const addCheckPointSchema = joi.object({
+  location: joi.string().trim().min(3).max(100).required(),
+  title: joi.string().trim().min(3).max(150).required(),
+  description: joi.string().trim().max(500).allow("", null).optional(),
+  status: joi
+    .string()
+    .valid("arrived", "in_transit", "delayed", "out_for_delivery", "delivered")
+    .required(),
+});

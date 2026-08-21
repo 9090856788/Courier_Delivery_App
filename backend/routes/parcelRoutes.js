@@ -1,6 +1,7 @@
 import express from "express";
 
 import {
+  addCheckPoints,
   createParcel,
   getParcelByTrackingId,
 } from "../controllers/parcelController.js";
@@ -465,4 +466,86 @@ router.post("/", protect, adminOnly, createParcel);
 
 router.get("/track/:trackingId", getParcelByTrackingId);
 
+/**
+ * @swagger
+ * /api/parcels/{trackingId}/checkpoints:
+ *   post:
+ *     summary: Add a checkpoint to a parcel
+ *     description: >
+ *       Adds a new tracking checkpoint to an existing parcel.
+ *       Only authenticated administrators can add checkpoints.
+ *       The updatedBy field is automatically assigned by the server.
+ *
+ *     tags:
+ *       - Parcels
+ *
+ *     security:
+ *       - bearerAuth: []
+ *
+ *     parameters:
+ *       - in: path
+ *         name: trackingId
+ *         required: true
+ *         description: Unique tracking ID of the parcel.
+ *         schema:
+ *           type: string
+ *         example: IND-1234567890
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - location
+ *               - title
+ *               - status
+ *             properties:
+ *               location:
+ *                 type: string
+ *                 description: Current location of the parcel.
+ *                 example: Bhubaneswar Hub
+ *
+ *               title:
+ *                 type: string
+ *                 description: Checkpoint title.
+ *                 example: Parcel In Transit
+ *
+ *               description:
+ *                 type: string
+ *                 description: Additional information about the checkpoint.
+ *                 example: Parcel has left the Bhubaneswar sorting facility.
+ *
+ *               status:
+ *                 type: string
+ *                 description: Current shipment status.
+ *                 enum:
+ *                   - arrived
+ *                   - in_transit
+ *                   - delayed
+ *                   - out_for_delivery
+ *                   - delivered
+ *                 example: in_transit
+ *
+ *     responses:
+ *       201:
+ *         description: Checkpoint added successfully.
+ *
+ *       400:
+ *         description: Invalid checkpoint data.
+ *
+ *       401:
+ *         description: Authentication required.
+ *
+ *       403:
+ *         description: Administrator access required.
+ *
+ *       404:
+ *         description: Parcel is not found.
+ *
+ *       500:
+ *         description: Internal server error.
+ */
+router.post("/:trackingId/checkpoints", protect, adminOnly, addCheckPoints);
 export default router;

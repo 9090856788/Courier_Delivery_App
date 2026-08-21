@@ -1,7 +1,10 @@
 import { Parcel } from "../models/parcelSchema.js";
 import { calculateCost } from "../services/calculateCost.js";
 import { generateTrackingId } from "../services/generateTrackingId.js";
-import { createParcelSchema } from "../validations/validations.js";
+import {
+  addCheckPointSchema,
+  createParcelSchema,
+} from "../validations/validations.js";
 
 /* -------------------------------------------------------------------------- */
 /*                            Create Parcel                                   */
@@ -121,6 +124,46 @@ export const getParcelByTrackingId = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Parcel retrieved successfully",
+      data: parcel,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const addCheckPoints = async (req, res, next) => {
+  try {
+    const { trackingId } = req.params;
+    const { error, value } = addCheckPointSchema.validate(req.body, {
+      abortEarly: true,
+      stripUnknown: true,
+    });
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details[0].message,
+      });
+    }
+    const parcel = await Parcel.findOne({
+      trackingId: trackingId.trim(),
+    });
+    if (!parcel) {
+      return res.status(404).json({
+        success: false,
+        message: "Parcel is not found.",
+      });
+    }
+    const checkpoints = {
+      ...value,
+      updatedBy: req.user ? req.user.name : "system",
+    };
+
+    parcel.checkPoints.push(checkpoints);
+    await parcel.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Checkpoint added successfully",
       data: parcel,
     });
   } catch (error) {
