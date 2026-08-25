@@ -2,6 +2,7 @@ import express from "express";
 
 import {
   addCheckPoints,
+  calculateCostCalculator,
   createParcel,
   getAllParcels,
   getParcelByTrackingId,
@@ -624,4 +625,125 @@ router.post("/:trackingId/checkpoints", protect, adminOnly, addCheckPoints);
  */
 router.get("/", protect, adminOnly, getAllParcels);
 
+/**
+ * @swagger
+ * /api/parcels/calculate-cost:
+ *   post:
+ *     summary: Calculate parcel shipping cost
+ *     description: >
+ *       Calculates the shipping cost based on origin city, destination city,
+ *       shipment type, parcel category, delivery type, and parcel weight.
+ *       This endpoint only calculates the cost and does not create a parcel
+ *       or generate a tracking ID.
+ *     tags:
+ *       - Parcels
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - originCity
+ *               - destinationCity
+ *               - shipmentType
+ *               - parcelCategory
+ *               - deliveryType
+ *               - parcelWeight
+ *
+ *             properties:
+ *               originCity:
+ *                 type: string
+ *                 minLength: 2
+ *                 maxLength: 100
+ *                 description: City from which the parcel is shipped.
+ *                 example: Bengaluru
+ *
+ *               destinationCity:
+ *                 type: string
+ *                 minLength: 2
+ *                 maxLength: 100
+ *                 description: Destination city of the parcel.
+ *                 example: Kolkata
+ *
+ *               shipmentType:
+ *                 type: string
+ *                 description: Type of shipment.
+ *                 enum:
+ *                   - National
+ *                   - International
+ *                 example: National
+ *
+ *               parcelCategory:
+ *                 type: string
+ *                 description: Category of the parcel.
+ *                 enum:
+ *                   - documents
+ *                   - electronics
+ *                   - clothing
+ *                   - fragile
+ *                   - food
+ *                   - medicine
+ *                   - cosmetics
+ *                   - books
+ *                   - small_package
+ *                   - large_package
+ *                   - other
+ *                 example: electronics
+ *
+ *               deliveryType:
+ *                 type: string
+ *                 description: Delivery service selected.
+ *                 enum:
+ *                   - standard
+ *                   - sameDay
+ *                   - overnight
+ *                 example: standard
+ *
+ *               parcelWeight:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *                 exclusiveMinimum: true
+ *                 description: Parcel weight in kilograms.
+ *                 example: 2.5
+ *
+ *     responses:
+ *       200:
+ *         description: Shipping cost calculated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 type:
+ *                   type: string
+ *                   example: national
+ *                 parcelCategory:
+ *                   type: string
+ *                   example: electronics
+ *                 price:
+ *                   type: number
+ *                   description: Calculated shipping price.
+ *                   example: 1500
+ *
+ *       400:
+ *         description: Validation error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: '"originCity" is required'
+ *
+ *       500:
+ *         description: Internal server error.
+ */
+router.post("/calculate-cost", calculateCostCalculator);
 export default router;

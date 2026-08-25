@@ -4,6 +4,7 @@ import { generateTrackingId } from "../services/generateTrackingId.js";
 
 import {
   addCheckPointSchema,
+  calculateCostSchema,
   createParcelSchema,
 } from "../validations/validations.js";
 
@@ -336,6 +337,26 @@ export const getAllParcels = async (req, res, next) => {
         hasPreviousPage: page > 1,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* -------------------------------------------------------------------------- */
+/*                           Calculate Cost Calculator                        */
+/* -------------------------------------------------------------------------- */
+
+export const calculateCostCalculator = async (req, res, next) => {
+  try {
+    const { error, value } = calculateCostSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details[0].message,
+      });
+    }
+    const priceInfo = calculateCost(value);
+    res.status(200).json(priceInfo);
   } catch (error) {
     next(error);
   }
