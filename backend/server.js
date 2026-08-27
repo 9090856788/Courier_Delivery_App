@@ -21,6 +21,7 @@ import { authLimiter, globalAPILimiter } from "./middlewares/rateLimiter.js";
 
 import AuthRoutes from "./routes/authRoutes.js";
 import ParcelRoutes from "./routes/parcelRoutes.js";
+import DashboardRoutes from "./routes/dashboardRoutes.js";
 
 /* -------------------------------------------------------------------------- */
 /*                              Configuration                                 */
@@ -118,6 +119,8 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", AuthRoutes);
 
 app.use("/api/parcels", ParcelRoutes);
+
+app.use("/api/dashboard", DashboardRoutes);
 
 /* -------------------------------------------------------------------------- */
 /*                              404 Handler                                   */
