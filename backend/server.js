@@ -13,7 +13,7 @@ import dbConnect from "./db/dbConnection.js";
 import swaggerSpec from "./config/swagger.js";
 
 import { errorHandler, notFoundHandler } from "./middlewares/errorHandler.js";
-import { authLimiter, globalAPILimiter } from "./middlewares/rateLimiter.js";
+import { globalAPILimiter } from "./middlewares/rateLimiter.js";
 
 /* -------------------------------------------------------------------------- */
 /*                                  Routes                                    */
@@ -22,6 +22,7 @@ import { authLimiter, globalAPILimiter } from "./middlewares/rateLimiter.js";
 import AuthRoutes from "./routes/authRoutes.js";
 import ParcelRoutes from "./routes/parcelRoutes.js";
 import DashboardRoutes from "./routes/dashboardRoutes.js";
+import AnalyticsRoutes from "./routes/analyticsRoutes.js";
 
 /* -------------------------------------------------------------------------- */
 /*                              Configuration                                 */
@@ -80,14 +81,6 @@ app.use(morgan("dev"));
  */
 app.use("/api", globalAPILimiter);
 
-/*
- * Authentication-specific rate limiter.
- *
- * Login/register routes can have their own stricter limiter.
- * The login route already uses authLimiter directly, so we don't
- * apply it globally here to avoid unnecessarily limiting other APIs.
- */
-
 /* -------------------------------------------------------------------------- */
 /*                            Swagger Documentation                           */
 /* -------------------------------------------------------------------------- */
@@ -121,6 +114,8 @@ app.use("/api/auth", AuthRoutes);
 app.use("/api/parcels", ParcelRoutes);
 
 app.use("/api/dashboard", DashboardRoutes);
+
+app.use("/api/analytics", AnalyticsRoutes);
 
 /* -------------------------------------------------------------------------- */
 /*                              404 Handler                                   */
