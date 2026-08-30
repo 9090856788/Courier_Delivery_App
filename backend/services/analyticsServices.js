@@ -89,7 +89,7 @@ export const getDashboardsStatsData = async () => {
         $group: {
           _id: null,
           revenue: {
-            $sum: "$price",
+            $sum: "$parcelPrice",
           },
         },
       },
@@ -146,7 +146,7 @@ export const getDashboardsStatsData = async () => {
             },
           },
           revenue: {
-            $sum: "$price",
+            $sum: "$parcelPrice",
           },
         },
       },
@@ -224,7 +224,7 @@ export const getDashboardsStatsData = async () => {
     Parcel.aggregate([
       {
         $bucket: {
-          groupBy: "$weight",
+          groupBy: "$parcelWeight",
           boundaries: [0, 1, 3, 5, 10, 20, 50, 10000000000],
           default: "unknown",
           output: {

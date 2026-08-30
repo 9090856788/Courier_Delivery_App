@@ -34,10 +34,12 @@ export const registerUser = async (req, res, next) => {
       });
     }
     const user = await User.create({ name, email, password });
+    const userResponse = user.toObject();
+    delete userResponse.password;
     res.status(201).json({
       success: true,
       message: "User Created Successfully",
-      user,
+      user: userResponse,
     });
   } catch (error) {
     next(error);
@@ -75,6 +77,8 @@ export const loginUser = async (req, res, next) => {
     }
     const token = generateToken(user._id);
     const cookieDays = Number(process.env.COOKIE_EXPIRE || 7);
+    const userResponse = user.toObject();
+    delete userResponse.password;
     res
       .status(200)
       .cookie("token", token, {
@@ -84,7 +88,7 @@ export const loginUser = async (req, res, next) => {
       .json({
         success: true,
         message: "User is Logged in Successfully",
-        user,
+        user: userResponse,
         token,
       });
   } catch (error) {

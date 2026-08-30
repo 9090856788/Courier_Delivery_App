@@ -149,6 +149,12 @@ export const calculateCost = ({
 
     parcelPrice += categoryCharge;
 
+    /* ---------------------------------------------------------------------- */
+    /*                     Delivery Type Charge                               */
+    /* ---------------------------------------------------------------------- */
+
+    parcelPrice += deliveryTypeCharge;
+
     return {
       shipmentType: "International",
       parcelCategory: normalizedCategory,

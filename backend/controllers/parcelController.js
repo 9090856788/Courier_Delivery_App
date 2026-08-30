@@ -86,12 +86,12 @@ export const createParcel = async (req, res, next) => {
       /*
        * calculateCost() returns:
        * {
-       *   type,
+       *   shipmentType,
        *   parcelCategory,
-       *   price
+       *   parcelPrice
        * }
        */
-      parcelPrice: priceInfo.price,
+      parcelPrice: priceInfo.parcelPrice,
 
       checkPoints: [initialCheckPoint],
 
@@ -192,7 +192,7 @@ export const addCheckPoints = async (req, res, next) => {
         message: "Parcel is not found.",
       });
     }
-    const checkpoints = {
+    const checkpoint = {
       ...value,
       updatedBy: req.user ? req.user.name : "system",
     };
@@ -263,7 +263,7 @@ export const getAllParcels = async (req, res, next) => {
      *
      * checkPoints[].status
      *
-     * Therefore we query the embedded checkpoints.
+     * Filter by the latest checkpoint status, not historical ones.
      */
     if (status) {
       const allowedStatuses = [
@@ -281,7 +281,9 @@ export const getAllParcels = async (req, res, next) => {
         });
       }
 
-      query["checkPoints.status"] = status;
+      query.$expr = {
+        $eq: [{ $arrayElemAt: ["$checkPoints.status", -1] }, status],
+      };
     }
 
     /* ---------------------------------------------------------------------- */

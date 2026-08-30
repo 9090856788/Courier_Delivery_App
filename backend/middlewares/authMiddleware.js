@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import  User  from "../models/userSchema.js";
+import User from "../models/userSchema.js";
 
 export const protect = async (req, res, next) => {
   let token;
@@ -40,4 +40,5 @@ export const adminOnly = (req, res, next) => {
       message: "Access denied, Admin only.",
     });
   }
+  next();
 };
