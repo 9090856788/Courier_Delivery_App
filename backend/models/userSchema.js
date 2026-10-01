@@ -55,6 +55,22 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
   return enteredPassword === this.password;
 };
 
-const User = mongoose.model("user", userSchema);
+import { memoryStore } from "../db/memoryStore.js";
+
+const UserModel = mongoose.models.user || mongoose.model("user", userSchema);
+
+const User = new Proxy(UserModel, {
+  get(target, prop) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      const val = target[prop];
+      return typeof val === "function" ? val.bind(target) : val;
+    }
+    if (prop in memoryStore.User) {
+      return memoryStore.User[prop];
+    }
+    const val = target[prop];
+    return typeof val === "function" ? val.bind(target) : val;
+  },
+});
 
 export default User;

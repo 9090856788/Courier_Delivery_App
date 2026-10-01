@@ -36,6 +36,9 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+// Trust reverse proxy headers (e.g. Cloud Run, AI Studio preview environment)
+app.set("trust proxy", 1);
+
 /* -------------------------------------------------------------------------- */
 /*                           Security Middleware                              */
 /* -------------------------------------------------------------------------- */

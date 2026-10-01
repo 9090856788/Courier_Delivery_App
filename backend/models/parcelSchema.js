@@ -222,4 +222,20 @@ const parcelSchema = new mongoose.Schema(
   },
 );
 
-export const Parcel = mongoose.model("Parcel", parcelSchema);
+import { memoryStore } from "../db/memoryStore.js";
+
+const ParcelModel = mongoose.models.Parcel || mongoose.model("Parcel", parcelSchema);
+
+export const Parcel = new Proxy(ParcelModel, {
+  get(target, prop) {
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      const val = target[prop];
+      return typeof val === "function" ? val.bind(target) : val;
+    }
+    if (prop in memoryStore.Parcel) {
+      return memoryStore.Parcel[prop];
+    }
+    const val = target[prop];
+    return typeof val === "function" ? val.bind(target) : val;
+  },
+});
